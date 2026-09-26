@@ -14,6 +14,14 @@ main{padding:22px;display:flex;align-items:center;flex-direction:column}.top{wid
 
 .module{width:min(960px,100%);margin-top:14px}.moduleBox{border:1px solid var(--line);border-radius:18px;background:rgba(10,16,27,.78);padding:18px}.moduleGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.moduleGrid.two{grid-template-columns:repeat(2,1fr)}.moduleCard{border:1px solid var(--line);border-radius:13px;background:#0e1521;padding:13px}.moduleCard h3{margin:0 0 7px}.moduleCard button{border:1px solid var(--line);background:#111a29;color:#dce5f5;border-radius:9px;padding:8px 10px;cursor:pointer}.moduleCard button:hover{background:#1a263b}.badge{display:inline-block;border:1px solid var(--line);border-radius:99px;padding:4px 8px;color:#aeb9cb;font-size:10px}.moduleInput{width:100%;padding:9px;background:#0b111b;color:#fff;border:1px solid var(--line);border-radius:9px}.moduleRow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px;border-bottom:1px solid rgba(255,255,255,.05)}.hideModule{display:none!important}
 @media(max-width:1050px){.app{grid-template-columns:190px 1fr}.right{display:none}.profile{width:160px}}@media(max-width:680px){.app{display:block}.side{display:none}main{padding:12px}.board{width:96vw}.status{width:96vw}.controls{overflow:auto}.sq{font-size:clamp(28px,11vw,52px)}}
+
+/* NOVA ASCENSION completion layer */
+.clock.active{border-color:var(--b);box-shadow:0 0 0 1px #58ddff33,0 0 24px #58ddff18;transform:translateY(-1px)}
+.clock.low{border-color:#ff7181;color:#ff9ca8;animation:novaPulse .9s ease-in-out infinite alternate}
+@keyframes novaPulse{to{box-shadow:0 0 20px #ff718133}}
+.moduleBox{box-shadow:0 18px 55px #0003}
+.moduleCard,.moduleBox{transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease}
+.moduleCard:hover{transform:translateY(-2px);border-color:#34425d;box-shadow:0 12px 30px #0003}
 </style></head><body>
 <div class="app"><aside class="side"><div class="logo">♔ NOVA</div><div class="sec">Command</div><div class="nav">
 <button class="active" data-p="play">◈ Play</button><button data-p="quick">⚡ Quick Match</button><button data-p="training">◇ Training</button><button data-p="puzzle">✦ Puzzle Lab</button><button data-p="ai">◎ AI Lab</button><button data-p="tournaments">▣ Tournaments</button></div><div class="sec">Universe</div><div class="nav"><button data-p="analysis">⌁ Analysis</button><button data-p="collection">◆ Collection</button><button data-p="clubs">◌ Clubs</button><button data-p="season">◈ Season</button><button data-p="settings">⚙ Settings</button></div><div class="profile"><div class="av">Y</div><div><b>You</b><div style="font-size:10px;color:#77839a">RATING 1420 · LEVEL 18</div></div></div></aside>
@@ -39,7 +47,7 @@ function openModule(name){
  if(name==='play'){hideModule();toast('PLAY');return}
  if(name==='quick'){
   showModule('<div class="moduleBox"><div class="eyebrow">LOCAL MATCHMAKER</div><h2>Quick Match</h2><p class="muted">Pick a real local time control and start on the main board.</p><div class="moduleGrid"><div class="moduleCard"><h3>Bullet</h3><span class="badge">1 + 0</span><br><button data-start="1 + 0">Start Match</button></div><div class="moduleCard"><h3>Blitz</h3><span class="badge">3 + 0</span><br><button data-start="3 + 0">Start Match</button></div><div class="moduleCard"><h3>Rapid</h3><span class="badge">10 + 0</span><br><button data-start="10 + 0">Start Match</button></div></div></div>');
-  document.querySelectorAll('[data-start]').forEach(x=>x.onclick=()=>{hideModule();newGame();toast('MATCH STARTED · '+x.dataset.start)});return
+  document.querySelectorAll('[data-start]').forEach(x=>x.onclick=()=>{hideModule();newGame(x.dataset.start);toast('MATCH STARTED · '+x.dataset.start)});return
  }
  if(name==='training'){
   showModule('<div class="moduleBox"><div class="eyebrow">ADAPTIVE ACADEMY</div><h2>Training Center</h2><p class="muted">Progress is saved locally.</p><div class="moduleGrid"><div class="moduleCard"><h3>Tactics</h3><div class="badge">72% mastery</div><br><button data-train="Tactics">Complete Drill</button></div><div class="moduleCard"><h3>Endgames</h3><div class="badge">54% mastery</div><br><button data-train="Endgame">Complete Drill</button></div><div class="moduleCard"><h3>Calculation</h3><div class="badge">61% mastery</div><br><button data-train="Calculation">Complete Drill</button></div></div><p>Completed drills: <b>'+nova.training+'</b></p></div>');
@@ -55,7 +63,7 @@ function openModule(name){
  }
  if(name==='tournaments'){
   showModule('<div class="moduleBox"><div class="eyebrow">LOCAL COMPETITION</div><h2>Neon Crown Sprint</h2><div class="moduleGrid"><div class="moduleCard"><h3>Quarterfinal</h3><span class="badge">OPEN</span><p>You vs Nova AI</p><button id="enterTournament">Enter Round</button></div><div class="moduleCard"><h3>Bracket</h3><div class="moduleRow"><span>You</span><b>—</b><span>Nova AI</span></div><div class="moduleRow"><span>Atlas</span><b>—</b><span>Orion</span></div><div class="moduleRow"><span>Helix</span><b>—</b><span>Vector</span></div></div><div class="moduleCard"><h3>Reward</h3><div class="big">+450 XP</div><div class="mini">Local progression reward.</div></div></div></div>');
-  document.getElementById('enterTournament').onclick=()=>{hideModule();newGame();toast('TOURNAMENT ROUND 1')};return
+  document.getElementById('enterTournament').onclick=()=>{hideModule();newGame('5 + 3');toast('TOURNAMENT ROUND 1')};return
  }
  if(name==='analysis'){
   showModule('<div class="moduleBox"><div class="eyebrow">POSITION WORKSPACE</div><h2>Analysis</h2><div class="moduleGrid two"><div class="moduleCard"><h3>FEN</h3><p class="mini" id="fenView" style="word-break:break-all">'+game.fen()+'</p><button id="copyFen">Copy FEN</button></div><div class="moduleCard"><h3>Signals</h3><div class="moduleRow"><span>Check</span><b>'+ (game.inCheck()?'YES':'NO') +'</b></div><div class="moduleRow"><span>Legal moves</span><b>'+game.moves().length+'</b></div><div class="moduleRow"><span>Last move</span><b>'+ (log[log.length-1]||'—') +'</b></div></div></div></div>');
@@ -81,4 +89,171 @@ function openModule(name){
  toast(name.toUpperCase())
 }
 let modal=document.getElementById('modal');document.getElementById('env').onclick=()=>modal.classList.add('on');document.getElementById('close').onclick=()=>modal.classList.remove('on');for(let e of envs){let d=document.createElement('div');d.className='theme';d.innerHTML='<div class="sw" style="background:linear-gradient(135deg,'+e[1]+','+e[2]+')"></div><b>'+e[0]+'</b>';d.onclick=()=>{document.documentElement.style.setProperty('--l',e[1]);document.documentElement.style.setProperty('--d',e[2]);document.getElementById('title').textContent=e[0].toUpperCase();modal.classList.remove('on')}}draw();
+
+/* ===== NOVA ASCENSION COMPLETION PACK ===== */
+let novaClockTimer=null;
+let novaWhiteSeconds=600;
+let novaBlackSeconds=600;
+let novaIncrement=0;
+let novaClockRunning=false;
+let novaFinished=false;
+
+function novaParseTimeControl(control){
+  const raw=String(control||'10 + 0').trim();
+  const m=raw.match(/(\d+)\s*\+\s*(\d+)/);
+  if(!m) return {seconds:600,increment:0};
+  return {seconds:Number(m[1])*60,increment:Number(m[2])};
+}
+
+function novaSetClockUI(){
+  const w=document.getElementById('whiteClock');
+  const b=document.getElementById('blackClock');
+  if(!w||!b)return;
+  const fmt=s=>String(Math.max(0,Math.floor(s/60))).padStart(2,'0')+':'+String(Math.max(0,Math.floor(s%60))).padStart(2,'0');
+  w.textContent=fmt(novaWhiteSeconds);
+  b.textContent=fmt(novaBlackSeconds);
+  const lowW=novaWhiteSeconds<=30, lowB=novaBlackSeconds<=30;
+  w.classList.toggle('low',lowW); b.classList.toggle('low',lowB);
+  w.classList.toggle('active',!novaFinished && game.turn()==='w' && !game.isGameOver());
+  b.classList.toggle('active',!novaFinished && game.turn()==='b' && !game.isGameOver());
+}
+
+function novaStopClock(){ novaClockRunning=false; clearInterval(novaClockTimer); novaClockTimer=null; }
+
+function novaFinishGame(message, ratingDelta=0){
+  novaFinished=true;
+  novaStopClock();
+  if(ratingDelta){
+    nova.rating=Math.max(100,nova.rating+ratingDelta);
+    localStorage.setItem('novaRating',String(nova.rating));
+  }
+  toast(message);
+  if(typeof draw==='function')draw();
+}
+
+function novaTickClock(){
+  if(!novaClockRunning || novaFinished || game.isGameOver()) return;
+  if(game.turn()==='w'){
+    novaWhiteSeconds--;
+    if(novaWhiteSeconds<=0){novaWhiteSeconds=0;novaFinishGame('TIME OUT · NOVA WINS',-10);return}
+  }else{
+    novaBlackSeconds--;
+    if(novaBlackSeconds<=0){novaBlackSeconds=0;novaFinishGame('TIME OUT · YOU WIN',10);return}
+  }
+  novaSetClockUI();
+}
+
+function startNovaClock(){
+  novaStopClock();
+  novaFinished=false;
+  novaClockRunning=true;
+  novaSetClockUI();
+  novaClockTimer=setInterval(novaTickClock,1000);
+}
+
+/* Fixes the previously missing newGame() command used by Quick Match and Tournaments. */
+function newGame(control){
+  const tc=novaParseTimeControl(control||'10 + 0');
+  game=new Chess();
+  sel=null;
+  flip=false;
+  last=null;
+  log=[];
+  nova.puzzleMode=false;
+  nova.sound=nova.sound!==false;
+  novaWhiteSeconds=tc.seconds;
+  novaBlackSeconds=tc.seconds;
+  novaIncrement=tc.increment;
+  novaFinished=false;
+  const moves=document.getElementById('moves');
+  if(moves)moves.innerHTML='';
+  const acc=document.getElementById('acc');
+  const best=document.getElementById('best');
+  if(acc)acc.textContent='—';
+  if(best)best.textContent='Waiting';
+  startNovaClock();
+  draw();
+}
+
+const _novaBaseDraw=draw;
+draw=function(){
+  _novaBaseDraw();
+  novaSetClockUI();
+};
+
+const _novaBaseAi=ai;
+ai=function(){
+  if(novaFinished)return;
+  _novaBaseAi();
+  novaWhiteSeconds=Math.min(novaWhiteSeconds+novaIncrement, novaParseTimeControl().seconds+novaIncrement*2);
+  novaSetClockUI();
+};
+
+/* Persist theme immediately when selected from the environment modal. */
+const _novaSetTheme=window.__novaSetThemeHook;
+if(!_novaSetTheme){
+  document.querySelectorAll('#themes .theme').forEach(el=>{
+    el.addEventListener('click',()=>setTimeout(()=>localStorage.setItem('novaTheme',document.getElementById('title')?.textContent||''),0));
+  });
+}
+
+/* Make the main New Game button reset into a real timed 10-minute match. */
+const _novaMainNew=document.getElementById('new');
+if(_novaMainNew){
+  _novaMainNew.onclick=()=>{newGame('10 + 0');toast('10 MINUTE MATCH READY')};
+}
+
+/* Resign and draw controls now stop the clock instead of being visual-only. */
+const _novaResign=document.getElementById('resign');
+if(_novaResign){
+  _novaResign.onclick=()=>{
+    if(!novaFinished){novaFinishGame('GAME RESIGNED',-8)}
+  };
+}
+const _novaDraw=document.getElementById('draw');
+if(_novaDraw){
+  _novaDraw.onclick=()=>toast('DRAW OFFER SENT · LOCAL MATCH');
+}
+
+/* Add PGN export to Analysis without removing the existing FEN tooling. */
+const _novaOriginalOpenModule=openModule;
+openModule=function(name){
+  _novaOriginalOpenModule(name);
+  if(name==='analysis'){
+    const box=document.querySelector('#module .moduleBox');
+    if(box && !document.getElementById('novaExportPgn')){
+      const p=document.createElement('button');
+      p.id='novaExportPgn';p.className='moduleCard';p.style.cursor='pointer';
+      p.innerHTML='<b>Export PGN</b><div style="font-size:10px;color:#8792aa;margin-top:5px">Download this game as a .pgn file.</div>';
+      box.appendChild(p);
+      p.onclick=()=>{
+        const pgn=game.pgn()||'[No moves yet]';
+        const a=document.createElement('a');
+        a.href=URL.createObjectURL(new Blob([pgn],{type:'text/plain'}));
+        a.download='nova-chess-game.pgn';
+        a.click();
+        setTimeout(()=>URL.revokeObjectURL(a.href),500);
+        toast('PGN EXPORTED');
+      };
+    }
+  }
+};
+
+/* Keyboard shortcuts: N=new game, F=flip, U=undo, Esc=clear selection. */
+document.addEventListener('keydown',e=>{
+  if(e.target && ['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName))return;
+  if(e.key.toLowerCase()==='n')newGame('10 + 0');
+  if(e.key.toLowerCase()==='f'){flip=!flip;draw()}
+  if(e.key.toLowerCase()==='u')document.getElementById('undo')?.click();
+  if(e.key==='Escape'){sel=null;draw()}
+});
+
+/* Start the upgraded live-clock system after the original UI bootstraps. */
+setTimeout(()=>{
+  novaWhiteSeconds=novaParseTimeControl('10 + 0').seconds;
+  novaBlackSeconds=novaWhiteSeconds;
+  startNovaClock();
+  novaSetClockUI();
+},0);
+
 </script></body></html>
