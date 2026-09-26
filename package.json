@@ -1,0 +1,1 @@
+{"name":"nova-chess-web","version":"1.0.0","private":true,"scripts":{"start":"npx serve -l $PORT ."}}
